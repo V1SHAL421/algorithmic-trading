@@ -9,13 +9,14 @@ from statsmodels.tsa.stattools import adfuller
 
 url = "https://github.com/rishabh89007/Time_Series_Datasets/raw/main/Coal%20Power.csv"
 data = pd.read_csv(url)
+print(data.columns)
 
-# Extract the 'x' (electric power) and 'y' (Coal) columns
-x = data["electric power (total)"]
-y = data["Coal"]
-observations = 200  # number of observations
-x = np.cumsum(np.random.randn(observations))  # sum of random normal values
-y = np.cumsum(np.random.randn(observations))
+# Extract columns from csv file
+column_name = (
+    "Total consumption : Texas : electric power (total) : quarterly (short tons)"
+)
+x = data[column_name]
+y = data.iloc[:, 1]
 
 
 # conduct CADF test
@@ -41,7 +42,7 @@ adf_statistic, alpha = cadf_test(y, x)
 print(f"ADF Statistic: {adf_statistic}")
 print(f"Significance level: {alpha}")
 
-if alpha < 0.05:  # strength of evidence against null hypothesis
+if alpha < 0.05 or alpha > 0.95:  # strength of evidence against null hypothesis
     print(  # accepts null hypothesis
         "Enough evidence to declare the residuals as stationary - cointegration may be involved."
     )
